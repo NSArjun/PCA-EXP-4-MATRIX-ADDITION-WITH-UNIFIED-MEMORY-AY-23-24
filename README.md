@@ -1,16 +1,25 @@
-# PCA-EXP-4-MATRIX-ADDITION-WITH-UNIFIED-MEMORY AY 23-24
-**Name: ARJUN N S** 
-**Register Number: 212223230020** 
-<h3>EX. NO:04</h3>
+# PCA-EXP-4-MATRIX-ADDITION-WITH-UNIFIED-MEMORY AY 25-26
+
+<h3>ENTER YOUR NAME : ARJUN N S</h3>
+<h3>ENTER YOUR REGISTER NO. : 212223230020</h3>
+<h3>EX. NO : 04</h3>
+<h3>DATE</h3>
+
 <h1> <align=center> MATRIX ADDITION WITH UNIFIED MEMORY </h3>
+  
   Refer to the program sumMatrixGPUManaged.cu. Would removing the memsets below affect performance? If you can, check performance with nvprof or nvvp.</h3>
 
 ## AIM:
+
 To perform Matrix addition with unified memory and check its performance with nvprof.
+
 ## EQUIPMENTS REQUIRED:
+
 Hardware – PCs with NVIDIA GPU & CUDA NVCC
 Google Colab with NVCC Compiler
+
 ## PROCEDURE:
+
 1.	Setup Device and Properties
 Initialize the CUDA device and get device properties.
 2.	Set Matrix Size: Define the size of the matrix based on the command-line argument or default value.
@@ -37,7 +46,15 @@ Allocate Host Memory
 22.	Reset the device using cudaDeviceReset and return from the main function.
 
 ## PROGRAM:
-WITH MEMSETS:
+
+```
+Developed By : Sriram Gopalan G
+Register No. : 212222230149
+```
+```
+!pip install git+https://github.com/andreinechaev/nvcc4jupyter.git
+%load_ext nvcc4jupyter
+```
 ```
 %%cuda
 #include <stdio.h>
@@ -197,7 +214,7 @@ int main(int argc, char **argv)
     int dev = 0;
     cudaDeviceProp deviceProp;
     CHECK(cudaGetDeviceProperties(&deviceProp, dev));
-**Name:** 
+    printf("using Device %d: %s\n", dev, deviceProp.name);
     CHECK(cudaSetDevice(dev));
 
     // set up data size of matrix
@@ -273,11 +290,11 @@ int main(int argc, char **argv)
     return (0);
 }
 ```
-WITHOUT MEMSETS:
 ```
 %%cuda
-#include <cuda_runtime.h>
 #include <stdio.h>
+#include <cuda_runtime.h>
+#include <cuda.h>
 #include <sys/time.h>
 
 #ifndef _COMMON_H
@@ -412,88 +429,17 @@ void checkResult(float *hostRef, float *gpuRef, const int N)
 __global__ void sumMatrixGPU(float *MatA, float *MatB, float *MatC, int nx,
                              int ny)
 {
-    unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
+
+
+
+   unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
     unsigned int iy = threadIdx.y + blockIdx.y * blockDim.y;
     unsigned int idx = iy * nx + ix;
 
     if (ix < nx && iy < ny)
-    {
         MatC[idx] = MatA[idx] + MatB[idx];
-    }
-}
-#ifndef _COMMON_H
-#define _COMMON_H
 
-#define CHECK(call)                                                            \
-{                                                                              \
-    const cudaError_t error = call;                                            \
-    if (error != cudaSuccess)                                                  \
-    {                                                                          \
-        fprintf(stderr, "Error: %s:%d, ", __FILE__, __LINE__);                 \
-        fprintf(stderr, "code: %d, reason: %s\n", error,                       \
-                cudaGetErrorString(error));                                    \
-        exit(1);                                                               \
-    }                                                                          \
 }
-
-#define CHECK_CUBLAS(call)                                                     \
-{                                                                              \
-    cublasStatus_t err;                                                        \
-    if ((err = (call)) != CUBLAS_STATUS_SUCCESS)                               \
-    {                                                                          \
-        fprintf(stderr, "Got CUBLAS error %d at %s:%d\n", err, __FILE__,       \
-                __LINE__);                                                     \
-        exit(1);                                                               \
-    }                                                                          \
-}
-
-#define CHECK_CURAND(call)                                                     \
-{                                                                              \
-    curandStatus_t err;                                                        \
-    if ((err = (call)) != CURAND_STATUS_SUCCESS)                               \
-    {                                                                          \
-        fprintf(stderr, "Got CURAND error %d at %s:%d\n", err, __FILE__,       \
-                __LINE__);                                                     \
-        exit(1);                                                               \
-    }                                                                          \
-}
-
-#define CHECK_CUFFT(call)                                                      \
-{                                                                              \
-    cufftResult err;                                                           \
-    if ( (err = (call)) != CUFFT_SUCCESS)                                      \
-    {                                                                          \
-        fprintf(stderr, "Got CUFFT error %d at %s:%d\n", err, __FILE__,        \
-                __LINE__);                                                     \
-        exit(1);                                                               \
-    }                                                                          \
-}
-
-#define CHECK_CUSPARSE(call)                                                   \
-{                                                                              \
-    cusparseStatus_t err;                                                      \
-    if ((err = (call)) != CUSPARSE_STATUS_SUCCESS)                             \
-    {                                                                          \
-        fprintf(stderr, "Got error %d at %s:%d\n", err, __FILE__, __LINE__);   \
-        cudaError_t cuda_err = cudaGetLastError();                             \
-        if (cuda_err != cudaSuccess)                                           \
-        {                                                                      \
-            fprintf(stderr, "  CUDA error \"%s\" also detected\n",             \
-                    cudaGetErrorString(cuda_err));                             \
-        }                                                                      \
-        exit(1);                                                               \
-    }                                                                          \
-}
-
-inline double seconds()
-{
-    struct timeval tp;
-    struct timezone tzp;
-    int i = gettimeofday(&tp, &tzp);
-    return ((double)tp.tv_sec + (double)tp.tv_usec * 1.e-6);
-}
-
-#endif // _COMMON_H
 
 int main(int argc, char **argv)
 {
@@ -503,7 +449,7 @@ int main(int argc, char **argv)
     int dev = 0;
     cudaDeviceProp deviceProp;
     CHECK(cudaGetDeviceProperties(&deviceProp, dev));
-**Name:** 
+    printf("using Device %d: %s\n", dev, deviceProp.name);
     CHECK(cudaSetDevice(dev));
 
     // set up data size of matrix
@@ -532,6 +478,9 @@ int main(int argc, char **argv)
     double iElaps = seconds() - iStart;
     printf("initialization: \t %f sec\n", iElaps);
 
+    //memset(hostRef, 0, nBytes);
+    //memset(gpuRef, 0, nBytes);
+
     // add matrix at host side for result checks
     iStart = seconds();
     sumMatrixOnHost(A, B, hostRef, nx, ny);
@@ -546,15 +495,16 @@ int main(int argc, char **argv)
 
     // warm-up kernel, with unified memory all pages will migrate from host to
     // device
-    sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, 1, 1);
+   // sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, 1, 1);
 
     // after warm-up, time with unified memory
     iStart = seconds();
 
     sumMatrixGPU<<<grid, block>>>(A, B, gpuRef, nx, ny);
 
-    CHECK(cudaDeviceSynchronize());
+
     iElaps = seconds() - iStart;
+    CHECK(cudaDeviceSynchronize());
     printf("sumMatrix on gpu :\t %f sec <<<(%d,%d), (%d,%d)>>> \n", iElaps,
             grid.x, grid.y, block.x, block.y);
 
@@ -576,12 +526,13 @@ int main(int argc, char **argv)
     return (0);
 }
 ```
-
 ## OUTPUT:
-WITH MEMSETS
-![image](https://github.com/21005290/PCA-EXP-4-MATRIX-ADDITION-WITH-UNIFIED-MEMORY-AY-23-24/assets/112933246/0b670ecb-1e25-416a-9c39-f40d0a72d09c)
-WITHOUT MEMSETS
-![image](https://github.com/21005290/PCA-EXP-4-MATRIX-ADDITION-WITH-UNIFIED-MEMORY-AY-23-24/assets/112933246/55749c9d-beae-4f6a-80d8-7e5ce98586a2)
+
+<img width="983" height="131" alt="image" src="https://github.com/user-attachments/assets/5470878c-bc70-4717-b4ce-ca43109108db" />
+<img width="981" height="128" alt="image" src="https://github.com/user-attachments/assets/75d27f9e-29a8-4cf2-b80b-bda156f22f0e" />
+
+
 
 ## RESULT:
-Thus the program has been executed by using unified memory. It is observed that removing memset function has given less/more 0.02 time.
+
+Thus the program has been executed by using unified memory. It is observed that removing memset function has given more time by a difference of 0.007516 sec.
